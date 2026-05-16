@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piggy Jewelry - Thanh Toán</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* GIAO DIỆN TRANG THANH TOÁN GỌN GÀNG, SANG TRỌNG */
+        .checkout-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            display: flex;
+            gap: 40px;
+            padding: 0 20px;
+        }
+        
+        .checkout-form-section {
+            flex: 1.3;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .checkout-summary-section {
+            flex: 1;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            height: fit-content;
+            border-top: 4px solid #c84b61;
+        }
+
+        h3 {
+            color: #2d3436;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #444;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+        }
+        .form-control:focus {
+            border-color: #c84b61;
+            outline: none;
+        }
+
+        /* Phương thức thanh toán */
+        .payment-methods {
+            margin-top: 20px;
+        }
+        .payment-option {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .payment-option:hover {
+            border-color: #c84b61;
+            background: #fdf2f4;
+        }
+        .payment-option input[type="radio"] {
+            accent-color: #c84b61;
+        }
+
+        /* Danh sách sản phẩm tóm tắt */
+        .summary-item {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f9f9f9;
+        }
+        .summary-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .summary-item-info {
+            flex: 1;
+        }
+        .summary-item-info h5 {
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+            color: #333;
+        }
+        .summary-item-info p {
+            margin: 0;
+            color: #777;
+            font-size: 0.85rem;
+        }
+        .summary-item-price {
+            font-weight: bold;
+            color: #2d3436;
+            font-size: 0.95rem;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-order {
+            display: block;
+            width: 100%;
+            background: #c84b61;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(200, 75, 97, 0.2);
+            transition: background 0.2s;
+        }
+        .btn-order:hover {
+            background: #b03b50;
+        }
+
+        /* CẤU TRÚC MODAL POP-UP CHUNG (DÙNG CHO CẢ QR VÀ THÀNH CÔNG) */
+        .qr-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .qr-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .qr-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            transform: translateY(-2px);
+        }
+        .qr-title {
+            color: #2b5876;
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        .qr-image-placeholder {
+            width: 220px;
+            height: 220px;
+            margin: 20px auto;
+            border: 1px solid #eee;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .qr-image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .bank-info-box {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            color: #333;
+            text-align: left;
+            margin-bottom: 20px;
+            border-left: 4px solid #c84b61;
+        }
+        .bank-info-box p {
+            margin: 5px 0;
+        }
+        .btn-close-qr {
+            background: #c84b61;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        .btn-close-qr:hover {
+            background: #b03b50;
+        }
+
+        /* ---------------------------------------------------- */
+        /* CSS CHO BẢNG THÔNG BÁO CHUYỂN KHOẢN THÀNH CÔNG (MỚI) */
+        .success-icon-box {
+            width: 70px;
+            height: 70px;
+            background: #ebfbf2;
+            color: #27ae60;
+            font-size: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px auto 20px auto;
+        }
+        .success-title {
+            color: #27ae60;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .success-details {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            background: #fdfdfd;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px dashed #27ae60;
+        }
+        .btn-success-done {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        .btn-success-done:hover {
+            background: #219653;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="top-header">
+        <h1>Trang Web Bán Hàng</h1>
+        <p class="subtitle">PIGGY JEWELRY COLLECTION</p>
+    </header>
+
+    <nav class="main-nav">
+        <ul>
+            <li><a href="index.html" style="font-size: 1.3rem; font-weight: bold;">Trang Chủ</a></li>
+            <li><a href="product.html" style="font-size: 1.3rem; font-weight: bold;">Sản Phẩm</a></li>
+            <li><a href="contact.html" style="font-size: 1.3rem; font-weight: bold;">Liên Hệ</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <h2 style="text-align: center; margin: 40px 0 20px 0; color: #c84b61; font-weight: 500;">TIẾN HÀNH THANH TOÁN</h2>
+        
+        <div class="checkout-container">
+            <div class="checkout-form-section">
+                <h3>Thông Tin Giao Hàng</h3>
+                <form id="checkoutForm" onsubmit="handlePlaceOrder(event)">
+                    <div class="form-group">
+                        <label for="fullName">Họ và tên người nhận *</label>
+                        <input type="text" id="fullName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phoneNumber">Số điện thoại *</label>
+                        <input type="tel" id="phoneNumber" class="form-control" placeholder="Nhập số điện thoại liên hệ" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="emailAddress">Địa chỉ Email</label>
+                        <input type="email" id="emailAddress" class="form-control" placeholder="Để nhận thông báo đơn hàng">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="shippingAddress">Địa chỉ nhận hàng chi tiết *</label>
+                        <input type="text" id="shippingAddress" class="form-control" placeholder="Số nhà, tên đường, phường/quận..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="orderNotes">Ghi chú đơn hàng (Không bắt buộc)</label>
+                        <textarea id="orderNotes" class="form-control" rows="3" placeholder="Ghi chú thêm cho người giao hàng..."></textarea>
+                    </div>
+
+                    <h3 style="margin-top: 35px;">Phương Thức Thanh Toán</h3>
+                    <div class="payment-methods">
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="COD" checked>
+                            <span>💵 Thanh toán khi nhận hàng (COD)</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="BANK">
+                            <span>🏦 Chuyển khoản ngân hàng qua mã QR (Xử lý nhanh)</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="MOMO">
+                            <span>🔮 Thanh toán qua Ví điện tử MoMo</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="checkout-summary-section">
+                <h3>Đơn Hàng Của Bạn</h3>
+                <div id="checkoutItemsList">
+                    </div>
+                
+                <div class="total-row">
+                    <span>Tổng cộng:</span>
+                    <span id="checkoutTotal" style="color: #c84b61;">$0</span>
+                </div>
+
+                <button type="submit" form="checkoutForm" class="btn-order">XÁC NHẬN ĐẶT HÀNG</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="qr-modal" id="qrModalPanel">
+        <div class="qr-content">
+            <div class="qr-title" id="modalTitleText">Quét Mã QR Đặt Hàng</div>
+            <p id="modalSubTitleText" style="font-size: 0.9rem; color: #666; margin: 0 0 10px 0;">Vui lòng dùng ứng dụng tương ứng quét mã để thanh toán tự động</p>
+            
+            <div class="qr-image-placeholder">
+                <img id="qrGeneratedImage" src="" alt="Mã QR Thanh Toán">
+            </div>
+
+            <div class="bank-info-box" id="modalDetailsBox">
+                </div>
+
+            <button class="btn-close-qr" onclick="showSuccessModal()">Tôi Đã Chuyển Khoản Thành Công</button>
+        </div>
+    </div>
+
+    <div class="qr-modal" id="successModalPanel">
+        <div class="qr-content">
+            <div class="success-icon-box">✓</div>
+            <div class="success-title">Thanh Toán Thành Công!</div>
+            
+            <div class="success-details">
+                <p style="margin: 5px 0;">🎉 Hệ thống <strong>Piggy Jewelry</strong> đã ghi nhận thành công giao dịch chuyển khoản của bạn.</p>
+                <p style="margin: 5px 0; font-size: 0.85rem; color: #666;">Đơn hàng của bạn đang được chuyển trạng thái đóng gói và chuẩn bị bàn giao cho đơn vị vận chuyển hỏa tốc.</p>
+            </div>
+
+            <button class="btn-success-done" onclick="closeAllAndFinish()">Hoàn Tất & Quay Về Trang Chủ</button>
+        </div>
+    </div>
+
+    <footer class="site-footer" style="margin-top: 60px;">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Về Piggy Jewelry</h3>
+                <p>Thương hiệu chế tác trang sức cao cấp, mang lại sự đẳng cấp và tinh tế trong từng sản phẩm cao cấp.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Hỗ trợ khách hàng</h3>
+                <p>Hotline tư vấn: <strong>0707025209</strong></p>
+                <p>Giờ làm việc: 8:00 - 22:00</p>
+            </div>
+            <div class="footer-col">
+                <h3>Chính sách mua hàng</h3>
+                <p>✓ Bảo hành làm sạch trọn đời</p>
+                <p>✓ Giao hàng toàn quốc bảo mật</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('piggy_cart')) || [];
+        let globalTotalValue = 0;
+
+        function renderCheckoutSummary() {
+            const container = document.getElementById('checkoutItemsList');
+            const totalSpan = document.getElementById('checkoutTotal');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `<p style="color:#777; text-align:center; padding: 20px 0;">Giỏ hàng trống.</p>`;
+                totalSpan.innerText = "$0";
+                return;
+            }
+
+            container.innerHTML = '';
+            globalTotalValue = 0;
+
+            cart.forEach(item => {
+                globalTotalValue += item.price * item.qty;
+                container.innerHTML += `
+                    <div class="summary-item">
+                        <img src="${item.img}" alt="${item.name}">
+                        <div class="summary-item-info">
+                            <h5>${item.name}</h5>
+                            <p>Số lượng: ${item.qty}</p>
+                        </div>
+                        <div class="summary-item-price">$${(item.price * item.qty).toLocaleString()}</div>
+                    </div>
+                `;
+            });
+
+            totalSpan.innerText = '$' + globalTotalValue.toLocaleString();
+        }
+
+        function handlePlaceOrder(event) {
+            event.preventDefault();
+
+            if (cart.length === 0) {
+                alert('Giỏ hàng trống, không thể đặt hàng!');
+                return;
+            }
+
+            const fullName = document.getElementById('fullName').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const method = document.querySelector('input[name="paymentMethod"]:checked').value;
+            
+            const randomId = Math.floor(1000 + Math.random() * 9000);
+            const orderCode = `PIGGY ${randomId}`;
+
+            // TRƯỜNG HỢP 1: BANK QR
+            if (method === 'BANK') {
+                document.getElementById('modalTitleText').innerText = "Thanh Toán Qua MB Bank";
+                document.getElementById('modalDetailsBox').innerHTML = `
+                    <p>🏦 <strong>Ngân hàng:</strong> MB Bank (Quân Đội)</p>
+                    <p>👤 <strong>Chủ tài khoản:</strong> HO MINH HIEU</p>
+                    <p>🔢 <strong>Số tài khoản:</strong> 0707025209</p>
+                    <p>💰 <strong>Số tiền:</strong> <span style="color: #c84b61; font-weight: bold;">$${globalTotalValue.toLocaleString()}</span></p>
+                    <p>📝 <strong>Nội dung ck:</strong> <span style="font-weight: bold; color: #2b5876;">${orderCode}</span></p>
+                `;
+
+                const bankQrData = `STK:0707025209|Bank:MBBank|Amount:${globalTotalValue}|Desc:${orderCode}`;
+                document.getElementById('qrGeneratedImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(bankQrData)}`;
+                document.getElementById('qrModalPanel').classList.add('active');
+
+            // TRƯỜNG HỢP 2: MOMO QR
+            } else if (method === 'MOMO') {
+                document.getElementById('modalTitleText').innerText = "Thanh Toán Qua Ví MoMo";
+                document.getElementById('modalDetailsBox').innerHTML = `
+                    <p>🔮 <strong>Ví điện tử:</strong> MoMo E-Wallet</p>
+                    <p>👤 <strong>Chủ tài khoản:</strong> HỒ MINH HIẾU</p>
+                    <p>🔢 <strong>Số điện thoại ví:</strong> 0707025209</p>
+                    <p>💰 <strong>Số tiền:</strong> <span style="color: #c84b61; font-weight: bold;">$${globalTotalValue.toLocaleString()}</span></p>
+                    <p>📝 <strong>Lời nhắn MoMo:</strong> <span style="font-weight: bold; color: #2b5876;">${orderCode}</span></p>
+                `;
+
+                const momoQrData = `2|99|0707025209|HO MINH HIEU|minhhieuh455@gmail.com|0|0|${globalTotalValue}|${orderCode}|transfer_my_monney`;
+                document.getElementById('qrGeneratedImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(momoQrData)}`;
+                document.getElementById('qrModalPanel').classList.add('active');
+
+            // TRƯỜNG HỢP 3: SHIP COD
+            } else if (method === 'COD') {
+                // Tận dụng bảng thành công để hiển thị luôn cho đẹp mắt
+                document.getElementById('successModalPanel').classList.add('active');
+            }
+        }
+
+        // Bước trung gian: Đóng bảng QR cũ và kích hoạt hiện bảng Chúc mừng thành công
+        function showSuccessModal() {
+            document.getElementById('qrModalPanel').classList.remove('active');
+            document.getElementById('successModalPanel').classList.add('active');
+        }
+
+        // Bước cuối cùng: Xóa sạch giỏ hàng trong LocalStorage và chuyển về trang chủ
+        function closeAllAndFinish() {
+            document.getElementById('successModalPanel').classList.remove('active');
+            localStorage.removeItem('piggy_cart');
+            window.location.href = 'index.html';
+        }
+
+        renderCheckoutSummary();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piggy Jewelry - Chi Tiết Sản Phẩm</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* GIAO DIỆN TRANG CHI TIẾT TINH GỌN - ĐÃ BỎ THUMBNAILS */
+        .detail-container {
+            max-width: 1100px;
+            margin: 50px auto 20px auto;
+            padding: 30px;
+            display: flex;
+            gap: 60px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .detail-img-box { 
+            flex: 1.1; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .main-image-wrapper {
+            width: 100%;
+            height: 480px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .main-image-wrapper img { 
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+        }
+
+        .detail-info-box { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-start; 
+        }
+        .detail-title { 
+            color: #2d3436; 
+            font-size: 2.2rem; 
+            margin: 0 0 10px 0; 
+            font-weight: 600;
+        }
+        .detail-price { 
+            color: #c84b61; 
+            font-size: 2rem; 
+            font-weight: bold; 
+            margin-bottom: 25px; 
+            border-bottom: 2px solid #fdf2f4;
+            padding-bottom: 15px;
+        }
+        
+        .product-highlights {
+            margin-bottom: 25px;
+        }
+        .highlight-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: #4a4a4a;
+        }
+
+        .info-tabs {
+            margin-bottom: 30px;
+        }
+        .tab-title {
+            font-size: 1.1rem;
+            color: #2d3436;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+            border-left: 3px solid #c84b61;
+            padding-left: 8px;
+        }
+        .tab-content {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .action-container {
+            margin-top: auto;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .purchase-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn-add-to-cart {
+            flex: 1;
+            padding: 15px 20px;
+            background: #2b5876;
+            color: white;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .btn-add-to-cart:hover { background: #1e3d52; }
+
+        .btn-buy-now-detail {
+            flex: 1;
+            padding: 15px 20px;
+            background: #c84b61;
+            color: white;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(200, 75, 97, 0.2);
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .btn-buy-now-detail:hover { background: #b03b50; transform: translateY(-2px); }
+
+        /* KHỐI SẢN PHẨM GỢI Ý XEM THÊM */
+        .related-products-section {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        .related-title {
+            color: #c84b61;
+            font-size: 1.6rem;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+            position: relative;
+        }
+        .related-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: #c84b61;
+            margin: 10px auto 0 auto;
+            border-radius: 2px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+        }
+        .related-item {
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #f5f5f5;
+        }
+        .related-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(200, 75, 97, 0.1);
+        }
+        .related-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+        .related-item h4 {
+            margin: 10px 0 5px 0;
+            font-size: 1rem;
+            color: #333;
+        }
+        .related-item h4 a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .related-item .price {
+            color: #c84b61;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .btn-view-more {
+            display: inline-block;
+            width: 100%;
+            padding: 8px 0;
+            background: #fdf2f4;
+            color: #c84b61;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .btn-view-more:hover {
+            background: #c84b61;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cart-trigger" onclick="toggleCart()">
+        🛒 Giỏ Hàng (<span id="cart-count">0</span>)
+    </div>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Giỏ Hàng Của Bạn</h3>
+            <span class="close-cart" onclick="toggleCart()">✕</span>
+        </div>
+        <div class="cart-items-list" id="cartItemsContainer"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Tổng tiền:</span>
+                <span id="cartTotalText">$0</span>
+            </div>
+            <a href="checkout.html" class="btn-checkout">Tiến Hành Thanh Toán</a>
+        </div>
+    </div>
+
+    <header class="top-header">
+        <h1>Piggy Jewelry</h1>
+        <p class="subtitle">PREMIUM JEWELRY COLLECTION</p>
+    </header>
+
+    <nav class="main-nav">
+        <ul>
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="product.html" class="active">Sản Phẩm</a></li>
+            <li><a href="contact.html">Liên Hệ</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <div class="detail-container" id="product-detail-view"></div>
+
+        <section class="related-products-section">
+            <h3 class="related-title">KHÁM PHÁ CÁC SẢN PHẨM KHÁC</h3>
+            <div class="related-grid" id="related-products-grid"></div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Về Piggy Jewelry</h3>
+                <p>Thương hiệu chế tác trang sức cao cấp, mang lại sự đẳng cấp và tinh tế trong từng sản phẩm.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Hỗ trợ khách hàng</h3>
+                <p>Hotline tư vấn: <strong>0707025209</strong></p>
+                <p>Giờ làm việc: 8:00 - 22:00</p>
+            </div>
+            <div class="footer-col">
+                <h3>Chính sách mua hàng</h3>
+                <p>✓ Bảo hành làm sạch trọn đời</p>
+                <p>✓ Giao hàng toàn quốc bảo mật</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // CƠ SỞ DỮ LIỆU ĐỒNG BỘ Đã làm sạch ảnh (Mỗi sản phẩm dùng 1 ảnh đại diện duy nhất)
+        const dbProducts = {
+            1: { 
+                name: "Nhẫn Kim Cương Trinity", 
+                price: 15500, 
+                img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=600&auto=format&fit=crop", 
+                story: "Được khơi nguồn cảm hứng từ sự gắn kết bất diệt, Nhẫn Kim Cương Trinity sở hữu thiết kế ba vòng tròn lồng ghép hoàn hảo vào nhau, tượng trưng cho ba cột mốc quan trọng của tình yêu: Quá khứ trân trọng, Hiện tại nồng nàn và Tương lai vĩnh cửu.",
+                spec: "Vàng nguyên khối 18K cao cấp (đạt chuẩn định lượng quốc tế), đính kết viên kim cương chủ tự nhiên đạt chứng nhận GIA toàn cầu với giác cắt tròn hoàn hảo mang lại độ bắt sáng tối đa.",
+                whyBuy: "Thiết kế giới hạn sang trọng. Khẳng định vị thế và gu thẩm mỹ xa xỉ, đẳng cấp của bạn."
+            },
+            2: { 
+                name: "Vòng Cổ South Sea Pearl", 
+                price: 22000, 
+                img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop", 
+                story: "Sở hữu báu vật vô giá từ lòng đại dương sâu thẳm, vòng cổ South Sea Pearl mang vẻ đẹp thanh lịch trường tồn bất chấp thời gian. Từng hạt ngọc trai được nuôi cấy tự nhiên và mất hàng năm trời để kiến tạo nên lớp xà cừ dày bóng mượt.",
+                spec: "Chuỗi ngọc trai biển South Sea tự nhiên, kích thước hạt tuyển chọn đồng đều từ 11mm - 13mm, sở hữu sắc ánh kim vàng tự nhiên, kết hợp cùng khóa cài bằng chất liệu Vàng Ý 18K đính kim cương tấm.",
+                whyBuy: "Mỗi viên ngọc là độc nhất do thiên nhiên ban tặng, cực kỳ dễ phối đồ dạ tiệc."
+            },
+            3: { 
+                name: "Nhẫn Bản To Mắt Xích", 
+                price: 12500, 
+                img: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=600&auto=format&fit=crop", 
+                story: "Đột phá ra khỏi những khuôn mẫu dịu dàng truyền thống, chiếc nhẫn mang tính biểu tượng hình khối kiến trúc đương đại này là tuyên ngôn mạnh mẽ về cái tôi cá tính. Thiết kế kết nối mắt xích đại diện cho sự kiên định, tự chủ và tinh thần tự do.",
+                spec: "Chất liệu Bạch kim (Platinum 950) hoặc Vàng 18K đúc đặc, có độ cứng vượt trội và khả năng chống trầy xước tuyệt đối, bề mặt được nạm đá quý cao cấp ở các đường viền giao nhau.",
+                whyBuy: "Phù hợp với những người yêu thích sự phá cách mạnh mẽ nhưng vẫn sang trọng."
+            },
+            4: { 
+                name: "Dây Chuyền Mặt Trăng Khuyết", 
+                price: 9800, 
+                img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=600&auto=format&fit=crop", 
+                story: "Mượn hình ảnh vầng trăng khuyết mộng mơ giữa bầu trời đêm huyền bí, sợi dây chuyền kể câu chuyện về nét đẹp bí ẩn và nội tâm sâu sắc của người phụ nữ. Ánh sáng lấp lánh nhẹ nhàng từ mặt dây chuyền mang lại cảm giác bình yên.",
+                spec: "Dây đeo dạng xích mảnh chế tác từ Vàng Ý 14K tinh khiết, mặt dây chuyền hình trăng lưỡi liềm được đính kết thủ công tỉ mỉ bằng đá thiên nhiên Swarovski có độ tán sắc rực rỡ.",
+                whyBuy: "Món trang sức thanh lịch thích hợp diện hàng ngày hoặc đi làm."
+            },
+            5: { 
+                name: "Dây Chuyền Thả Solitaire", 
+                price: 18200, 
+                img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=600&auto=format&fit=crop", 
+                story: "Sự tinh giản chính là đỉnh cao của sự xa xỉ. Sợi dây chuyền dáng thả Solitaire được thiết kế với triết lý tôn vinh trọn vẹn nét quyến rũ tự nhiên của phần cổ và xương quai xanh thanh mảnh.",
+                spec: "Dây chuyền chất liệu Vàng/Platinum thời thượng 18K, mặt thả đính một viên kim cương chủ thiên nhiên dáng Marquise (giọt nước) đạt cấp độ màu sắc nước D tuyệt đối.",
+                whyBuy: "Món trang sức 'quốc dân' bắt buộc phải có trong tủ đồ của các quý cô sành điệu."
+            },
+            6: { 
+                name: "Bông Tai Thả Lamary Ruby", 
+                price: 12400, 
+                img: "https://images.unsplash.com/photo-1635767798638-3e25273a8236?q=80&w=600&auto=format&fit=crop", 
+                story: "Sắc đỏ nồng nàn rực rỡ của đá Ruby hay nét trong trẻo của Topaz từ lâu đã được xem là biểu tượng của tình yêu say đắm, quyền lực và sự may mắn tối thượng. Đôi bông tai dáng thả Lamary mang phong cách hoàng gia quý tộc.",
+                spec: "Bạc Sterling phủ Rhodium hoặc vàng trắng cao cấp, đính Đá quý thiên nhiên cắt giọt nước tinh xảo bao bọc bởi các tầng đá tấm lấp lánh.",
+                whyBuy: "Mang ý nghĩa bình an và kiêu hãnh. Trọng lượng siêu nhẹ mang lại cảm giác thoải mái."
+            },
+            7: {
+                name: "Vòng Kiềng Tay Bangle Luxury",
+                price: 14200,
+                img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=600&auto=format&fit=crop",
+                story: "Mang nét đẹp giao thoa giữa giá trị truyền thống và hơi thở hiện đại, chiếc kiềng tay trơn tinh giản sở hữu những đường nét chạm khắc chìm thủ công vô cùng mềm mại. Sản phẩm tôn vinh nét đài các, thanh lịch.",
+                spec: "Vàng Tây 18K hoặc Bạch kim đúc đặc nguyên khối tinh xảo, bề mặt bên trong được xử lý bo góc mịn màng tuyệt đối chống trầy xước da.",
+                whyBuy: "Dễ phối đồ, trường tồn giá trị theo năm tháng."
+            },
+            8: {
+                name: "Nhẫn Vương Miện Tiara Hoàng Gia",
+                price: 11500,
+                img: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=600&auto=format&fit=crop",
+                story: "Mỗi người phụ nữ đều là một nữ hoàng trong thế giới của chính mình. Lấy cảm hứng từ những chiếc vương miện lộng lẫy của hoàng tộc, chiếc nhẫn Tiara là phần thưởng tôn vinh sự tự chủ, độc lập và bản lĩnh của phái đẹp.",
+                spec: "Chất liệu Bạch kim/Vàng hồng cao cấp phối hợp hoàn hảo cùng các viên đá quý Moissanite thiên nhiên được đính kết tỉ mỉ theo cấu trúc phân tầng bắt sáng đa góc độ.",
+                whyBuy: "Món quà kỷ niệm hoàn hảo tự thưởng cho những cột mốc thành công của bản thân."
+            },
+            9: {
+                name: "Mặt Dây Chuyền Giọt Lệ Ngọc Bảo",
+                price: 19500,
+                img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=600&auto=format&fit=crop",
+                story: "Sở hữu giác cắt giọt lệ vô cùng quý hiếm và khó chế tác bậc nhất, mặt dây chuyền thu hút ánh nhìn bởi chiều sâu tinh thể hoàn hảo. Nét quyến rũ tự nhiên từ viên ngọc chủ mang năng lượng phong thủy cát tường.",
+                spec: "Mặt dây chuyền chế tác từ Bạch kim hoặc Vàng 18K nguyên khối, ổ viền nạm full kim cương tấm tinh tuyển đạt độ sáng rực rỡ.",
+                whyBuy: "Đá quý màu chất lượng cao vô cùng giữ giá, mang giá trị sưu tầm lâu dài."
+            },
+            10: {
+                name: "Bông Tai Ngọc Trai Nút Akoya",
+                price: 13800,
+                img: "https://images.unsplash.com/photo-1635767798638-3e25273a8236?q=80&w=600&auto=format&fit=crop",
+                story: "Sự kết hợp hoàn hảo giữa nét đơn giản kinh điển và vẻ thanh lịch vượt thời gian. Đôi bông tai dáng nút ôm sát thùy tai làm nổi bật gương mặt thanh tú với ánh xà cừ huyền ảo thu hút.",
+                spec: "Ngọc trai Akoya biển sâu tự nhiên size chuẩn 8mm có độ tròn trịa hoàn hảo, chân đế và chuôi vặn khóa cài làm hoàn toàn bằng Vàng 18K chắc chắn.",
+                whyBuy: "Kiểu dáng kinh điển thanh lịch, không bao giờ lo bị lỗi mốt theo thời gian."
+            },
+            11: {
+                name: "Dây Chuyền Ngọc Lục Bảo Colombia",
+                price: 26000,
+                img: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600&auto=format&fit=crop",
+                story: "Được mệnh danh là kiệt tác của giới hoàng gia thượng lưu, sắc xanh lục mượt mà sâu thẳm của viên ngọc lục bảo Colombia toát lên vẻ quyền lực, sự giàu sang và uy quyền tối thượng.",
+                spec: "Ngọc lục bảo thiên nhiên vùng Colombia đạt độ bão hòa màu sắc hoàn hảo, kết hợp cùng chuỗi mắc nối tinh xảo làm từ Platinum cao cấp nạm kim cương.",
+                whyBuy: "Đẳng cấp độc nhất vô nhị giúp bạn nổi bật tuyệt đối tại bất kì thảm đỏ nào."
+            },
+            12: {
+                name: "Lắc Tay Chuỗi Xoắn Diamond Twist",
+                price: 17300,
+                img: "https://images.unsplash.com/photo-1543294001-f7cbfe92237e?q=80&w=600&auto=format&fit=crop",
+                story: "Cấu trúc chuỗi xoắn đôi mềm mại tượng trưng cho những sợi tơ duyên nợ đan cài khăng khít không thể tách rời. Chiếc lắc tay ôm sát cổ tay một cách uyển chuyển theo từng cử động.",
+                spec: "Vàng nguyên khối 18K hoặc Bạch kim cao cấp kéo dệt công nghệ cao, nạm full kim cương tấm kết dính siêu nhỏ chạy dọc theo thân dải xoắn.",
+                whyBuy: "Tạo hiệu ứng chuyển động lấp lánh vô cùng bắt mắt theo từng cái vẫy tay tinh tế."
+            }
+        };
+
+        // Đọc ID sản phẩm từ URL thanh địa chỉ
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = parseInt(urlParams.get('id')) || 1;
+        const currentProduct = dbProducts[productId];
+
+        // 1. RENDER CHI TIẾT SẢN PHẨM CHÍNH (ĐÃ LOẠI BỎ HOÀN TOÀN CỤM THUMBNAIL CHỌN ẢNH NHỎ)
+        const detailView = document.getElementById('product-detail-view');
+        if (currentProduct) {
+            detailView.innerHTML = `
+                <div class="detail-img-box">
+                    <div class="main-image-wrapper">
+                        <img src="${currentProduct.img}" alt="${currentProduct.name}">
+                    </div>
+                </div>
+                <div class="detail-info-box">
+                    <h2 class="detail-title">${currentProduct.name}</h2>
+                    <div class="detail-price">$${currentProduct.price.toLocaleString()}</div>
+                    
+                    <div class="product-highlights">
+                        <div class="highlight-item">✨ <span>Cam kết đá quý/kim cương thiên nhiên 100% có kiểm định</span></div>
+                        <div class="highlight-item">🛡️ <span>Bảo hành đánh bóng, làm sạch miễn phí trọn đời</span></div>
+                        <div class="highlight-item">📦 <span>Giao hàng hỏa tốc bảo mật, miễn phí toàn quốc</span></div>
+                    </div>
+
+                    <div class="info-tabs">
+                        <div class="tab-title">CÂU CHUYỆN SẢN PHẨM</div>
+                        <div class="tab-content">${currentProduct.story}</div>
+                        
+                        <div class="tab-title">THÔNG SỐ CHẾ TÁC</div>
+                        <div class="tab-content">${currentProduct.spec}</div>
+                        
+                        <div class="tab-title">TẠI SAO BẠN NÊN SỞ HỮU?</div>
+                        <div class="tab-content">${currentProduct.whyBuy}</div>
+                    </div>
+
+                    <div class="action-container">
+                        <div class="purchase-buttons">
+                            <button class="btn-add-to-cart" onclick="addToCart()">Thêm Vào Giỏ Hàng</button>
+                            <button class="btn-buy-now-detail" onclick="buyNow()">Mua Ngay</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 2. RENDER KHỐI CÁC SẢN PHẨM KHÁC (GỢI Ý) Ở PHÍA DƯỚI
+        const relatedGrid = document.getElementById('related-products-grid');
+        Object.keys(dbProducts).forEach(id => {
+            const prodId = parseInt(id);
+            if (prodId !== productId) {
+                const prod = dbProducts[prodId];
+                relatedGrid.innerHTML += `
+                    <div class="related-item">
+                        <a href="detail.html?id=${prodId}"><img src="${prod.img}" alt="${prod.name}"></a>
+                        <h4><a href="detail.html?id=${prodId}">${prod.name}</a></h4>
+                        <div class="price">$${prod.price.toLocaleString()}</div>
+                        <a href="detail.html?id=${prodId}" class="btn-view-more">Xem Chi Tiết</a>
+                    </div>
+                `;
+            }
+        });
+
+        /* XỬ LÝ GIỎ HÀNG VÀ LOCALSTORAGE */
+        let cart = JSON.parse(localStorage.getItem('piggy_cart')) || [];
+
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('open');
+        }
+
+        function updateCartUI() {
+            localStorage.setItem('piggy_cart', JSON.stringify(cart));
+            const container = document.getElementById('cartItemsContainer');
+            const countSpan = document.getElementById('cart-count');
+            const totalSpan = document.getElementById('cartTotalText');
+            
+            container.innerHTML = '';
+            let totalItems = 0;
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                totalItems += item.qty;
+                totalPrice += item.price * item.qty;
+
+                container.innerHTML += `
+                    <div class="cart-item-row">
+                        <img src="${item.img}" alt="${item.name}">
+                        <div class="cart-item-info">
+                            <h5>${item.name}</h5>
+                            <p>$${(item.price * item.qty).toLocaleString()}</p>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+                                <span>${item.qty}</span>
+                                <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            countSpan.innerText = totalItems;
+            totalSpan.innerText = '$' + totalPrice.toLocaleString();
+        }
+
+        function addToCart() {
+            if (!currentProduct) return;
+            const existingItem = cart.find(x => x.id === productId);
+            if (existingItem) {
+                existingItem.qty++;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: currentProduct.name,
+                    price: currentProduct.price,
+                    img: currentProduct.img, 
+                    qty: 1
+                });
+            }
+            updateCartUI();
+            document.getElementById('cartSidebar').classList.add('open');
+        }
+
+        function buyNow() {
+            if (!currentProduct) return;
+            const existingItem = cart.find(x => x.id === productId);
+            if (existingItem) {
+                existingItem.qty++;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: currentProduct.name,
+                    price: currentProduct.price,
+                    img: currentProduct.img,
+                    qty: 1
+                });
+            }
+            localStorage.setItem('piggy_cart', JSON.stringify(cart));
+            window.location.href = 'checkout.html';
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(x => x.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) {
+                    cart = cart.filter(x => x.id !== id);
+                }
+                updateCartUI();
+            }
+        }
+        updateCartUI();
+    </script>
+</body>
+
+</html>

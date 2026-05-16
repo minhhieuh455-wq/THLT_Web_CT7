@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piggy Jewelry - Sản Phẩm</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Tối ưu giao diện hiển thị giống Apple Store tinh giản */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid #f0f0f0;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(200, 75, 97, 0.1);
+        }
+        .product-img-wrapper {
+            width: 100%;
+            height: 240px;
+            overflow: hidden;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        .product-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .product-card h3 {
+            font-size: 1.1rem;
+            color: #333;
+            margin: 10px 0 5px 0;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .product-card .price {
+            color: #c84b61;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        .btn-view-detail {
+            display: block;
+            width: 100%;
+            padding: 10px 0;
+            background: #2b5876;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: background 0.2s;
+            margin-top: auto;
+        }
+        .btn-view-detail:hover {
+            background: #1e3d52;
+        }
+        .page-title {
+            text-align: center;
+            color: #c84b61;
+            margin-top: 30px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cart-trigger" onclick="toggleCart()">
+        🛒 Giỏ Hàng (<span id="cart-count">0</span>)
+    </div>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Giỏ Hàng Của Bạn</h3>
+            <span class="close-cart" onclick="toggleCart()">✕</span>
+        </div>
+        <div class="cart-items-list" id="cartItemsContainer"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Tổng tiền:</span>
+                <span id="cartTotalText">$0</span>
+            </div>
+            <a href="checkout.html" class="btn-checkout">Tiến Hành Thanh Toán</a>
+        </div>
+    </div>
+
+    <header class="top-header">
+        <h1>Piggy Jewelry</h1>
+        <p class="subtitle">PREMIUM JEWELRY COLLECTION</p>
+    </header>
+
+    <nav class="main-nav">
+        <ul>
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="product.html" class="active">Sản Phẩm</a></li>
+            <li><a href="contact.html">Liên Hệ</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <h2 class="page-title">Tất Cả Sản Phẩm</h2>
+
+        <div class="products-grid" id="category-products-grid"></div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Về Piggy Jewelry</h3>
+                <p>Thương hiệu chế tác trang sức cao cấp, mang lại sự đẳng cấp và tinh tế trong từng sản phẩm.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Hỗ trợ khách hàng</h3>
+                <p>Hotline tư vấn: <strong>0707025209</strong></p>
+                <p>Giờ làm việc: 8:00 - 22:00</p>
+            </div>
+            <div class="footer-col">
+                <h3>Chính sách mua hàng</h3>
+                <p>✓ Bảo hành làm sạch trọn đời</p>
+                <p>✓ Giao hàng toàn quốc bảo mật</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // CƠ SỞ DỮ LIỆU ĐÃ RÚT GỌN ĐÚNG 10 SẢN PHẨM KHỚP VỚI INDEX.HTML
+        const dbProducts = {
+            1: { name: "Nhẫn Kim Cương Trinity", price: 15500, img: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=600&auto=format&fit=crop" },
+            2: { name: "Vòng Cổ South Sea Pearl", price: 22000, img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop" },
+            3: { name: "Nhẫn Bản To Mắt Xích", price: 12500, img: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=600&auto=format&fit=crop" },
+            4: { name: "Dây Chuyền Mặt Trăng Khuyết", price: 9800, img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=600&auto=format&fit=crop" },
+            5: { name: "Dây Chuyền Thả Solitaire", price: 18200, img: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600&auto=format&fit=crop" },
+            6: { name: "Bông Tai Thả Lamary Ruby", price: 12400, img: "https://images.unsplash.com/photo-1635767798638-3e25273a8236?q=80&w=600&auto=format&fit=crop" },
+            7: { name: "Vòng Kiềng Tay Bangle Luxury", price: 14200, img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=600&auto=format&fit=crop" },
+            8: { name: "Nhẫn Vương Miện Tiara Hoàng Gia", price: 11500, img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=600&auto=format&fit=crop" },
+            11: { name: "Chuỗi Ngọc Trai Akoya Luxury", price: 25000, img: "https://images.unsplash.com/photo-1630019852942-f89202989a59?q=80&w=600&auto=format&fit=crop" },
+            12: { name: "Nhẫn Hoa Amethyst Thạch Anh", price: 13200, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600&auto=format&fit=crop" }
+        };
+
+        // Render động danh sách sản phẩm lên giao diện
+        const categoryGrid = document.getElementById('category-products-grid');
+        Object.keys(dbProducts).forEach(id => {
+            const p = dbProducts[id];
+            categoryGrid.innerHTML += `
+                <div class="product-card">
+                    <div class="product-img-wrapper">
+                        <img src="${p.img}" alt="${p.name}">
+                    </div>
+                    <h3>${p.name}</h3>
+                    <div class="price">$${p.price.toLocaleString()}</div>
+                    <a href="detail.html?id=${id}" class="btn-view-detail">Xem Chi Tiết</a>
+                </div>
+            `;
+        });
+
+        /* Quản lý cập nhật đồng bộ dữ liệu giỏ hàng */
+        let cart = JSON.parse(localStorage.getItem('piggy_cart')) || [];
+        function toggleCart() { document.getElementById('cartSidebar').classList.toggle('open'); }
+        
+        function updateCartUI() {
+            localStorage.setItem('piggy_cart', JSON.stringify(cart));
+            const container = document.getElementById('cartItemsContainer');
+            const countSpan = document.getElementById('cart-count');
+            const totalSpan = document.getElementById('cartTotalText');
+            
+            container.innerHTML = '';
+            let totalItems = 0, totalPrice = 0;
+
+            cart.forEach(item => {
+                totalItems += item.qty;
+                totalPrice += item.price * item.qty;
+                container.innerHTML += `
+                    <div class="cart-item-row">
+                        <img src="${item.img}" alt="${item.name}">
+                        <div class="cart-item-info">
+                            <h5>${item.name}</h5>
+                            <p>$${(item.price * item.qty).toLocaleString()}</p>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+                                <span>${item.qty}</span>
+                                <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            countSpan.innerText = totalItems;
+            totalSpan.innerText = '$' + totalPrice.toLocaleString();
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(x => x.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
+                updateCartUI();
+            }
+        }
+        updateCartUI();
+    </script>
+</body>
+</html>
